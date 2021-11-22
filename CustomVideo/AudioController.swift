@@ -45,6 +45,19 @@ class AudioController {
         self.audioFormat = audioFormat
         print("File format: \(String(describing: audioFormat))")
 
+        // Set up session
+        let session = AVAudioSession.sharedInstance()
+        do {
+            try session.setCategory(.record, options: .defaultToSpeaker)
+        } catch {
+            print("Could not set audio category: \(error.localizedDescription)")
+        }
+        do {
+            try session.setPreferredSampleRate(audioFormat.sampleRate)
+        } catch {
+            print("Could not set preferred sample rate: \(error.localizedDescription)")
+        }
+
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(configChanged(_:)),

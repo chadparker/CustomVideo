@@ -108,6 +108,10 @@ class ViewController: UIViewController, CameraControllerDelegate {
         present(alertController, animated: true, completion: nil)
     }
 
+    func newVideoFile(_ path: String) {
+        print(path)
+    }
+
     // MARK: - Actions
 
     @objc private func setMicMode(_ button: UIButton) {

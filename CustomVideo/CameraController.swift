@@ -9,6 +9,7 @@ protocol CameraControllerDelegate: AnyObject {
     func cameraSwitchingEnabled(_ enabled: Bool)
     func resumingEnabled(_ enabled: Bool)
     func resumeFailed()
+    func newVideoFile(_ path: String)
 }
 
 class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
@@ -378,13 +379,14 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
         // Note: Because we use a unique file path for each recording, a new recording won't overwrite a recording mid-save.
         func cleanup() {
             let path = outputFileURL.path
-            if FileManager.default.fileExists(atPath: path) {
-                do {
-                    try FileManager.default.removeItem(atPath: path)
-                } catch {
-                    print("Could not remove file at url: \(outputFileURL)")
-                }
-            }
+            delegate.newVideoFile(path)
+//            if FileManager.default.fileExists(atPath: path) {
+//                do {
+//                    try FileManager.default.removeItem(atPath: path)
+//                } catch {
+//                    print("Could not remove file at url: \(outputFileURL)")
+//                }
+//            }
             if let currentBackgroundRecordingID = backgroundRecordingID {
                 backgroundRecordingID = UIBackgroundTaskIdentifier.invalid
 

@@ -16,6 +16,7 @@
 		87E77FCB274BF1B400D0EAA4 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E77FCA274BF1B400D0EAA4 /* PreviewView.swift */; };
 		87E77FCD274BF1BA00D0EAA4 /* Configurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E77FCC274BF1BA00D0EAA4 /* Configurable.swift */; };
 		87E77FCF274BF4C700D0EAA4 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E77FCE274BF4C700D0EAA4 /* CameraController.swift */; };
+		87E77FD1274C03FB00D0EAA4 /* AudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E77FD0274C03FB00D0EAA4 /* AudioController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		87E77FCA274BF1B400D0EAA4 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
 		87E77FCC274BF1BA00D0EAA4 /* Configurable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configurable.swift; sourceTree = "<group>"; };
 		87E77FCE274BF4C700D0EAA4 /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
+		87E77FD0274C03FB00D0EAA4 /* AudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +68,7 @@
 				87E77FB8274BF19600D0EAA4 /* SceneDelegate.swift */,
 				87E77FBA274BF19600D0EAA4 /* ViewController.swift */,
 				87E77FCE274BF4C700D0EAA4 /* CameraController.swift */,
+				87E77FD0274C03FB00D0EAA4 /* AudioController.swift */,
 				87E77FCA274BF1B400D0EAA4 /* PreviewView.swift */,
 				87E77FCC274BF1BA00D0EAA4 /* Configurable.swift */,
 				87E77FBC274BF19600D0EAA4 /* Main.storyboard */,
@@ -147,6 +150,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				87E77FD1274C03FB00D0EAA4 /* AudioController.swift in Sources */,
 				87E77FCF274BF4C700D0EAA4 /* CameraController.swift in Sources */,
 				87E77FCD274BF1BA00D0EAA4 /* Configurable.swift in Sources */,
 				87E77FBB274BF19600D0EAA4 /* ViewController.swift in Sources */,

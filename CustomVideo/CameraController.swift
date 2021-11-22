@@ -27,6 +27,8 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
     weak var delegate: CameraControllerDelegate!
     private weak var previewView: PreviewView!
 
+    private let audioController: AudioController!
+
     let session = AVCaptureSession()
     // Communicate with the session and other session objects on this queue
     private let sessionQueue = DispatchQueue(label: "session queue")
@@ -62,6 +64,13 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
 
     init(previewView: PreviewView) {
         self.previewView = previewView
+        do {
+            audioController = try AudioController()
+            audioController.setup()
+            audioController.start()
+        } catch {
+            fatalError("Could not set up audio engine: \(error)")
+        }
     }
 
     // MARK: - Configuration

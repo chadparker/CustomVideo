@@ -20,10 +20,9 @@ class AudioController {
     private var recordedFilePlayer = AVAudioPlayerNode()
     private var avAudioEngine = AVAudioEngine()
     private var isNewRecordingAvailable = false
-    private var fileFormat: AVAudioFormat
+    private var audioFormat: AVAudioFormat
     private var recordedFile: AVAudioFile?
 
-    public private(set) var voiceIOFormat: AVAudioFormat
     public private(set) var isRecording = false
 
     var isPlaying: Bool {
@@ -35,8 +34,7 @@ class AudioController {
     init() throws {
         avAudioEngine.attach(recordedFilePlayer)
 
-        guard
-            let tempFileFormat = AVAudioFormat(
+        guard let audioFormat = AVAudioFormat(
             commonFormat: .pcmFormatFloat32,
             sampleRate: 48000,
             channels: 1,
@@ -44,9 +42,8 @@ class AudioController {
         ) else {
             throw AudioEngineError.fileFormatError
         }
-        fileFormat = tempFileFormat
-        voiceIOFormat = tempFileFormat
-        print("File format: \(String(describing: fileFormat))")
+        self.audioFormat = audioFormat
+        print("File format: \(String(describing: audioFormat))")
 
         NotificationCenter.default.addObserver(
             self,
@@ -76,10 +73,10 @@ class AudioController {
         let output = avAudioEngine.outputNode
         let mainMixer = avAudioEngine.mainMixerNode
 
-        avAudioEngine.connect(recordedFilePlayer, to: mainMixer, format: voiceIOFormat)
-        avAudioEngine.connect(mainMixer, to: output, format: voiceIOFormat)
+        avAudioEngine.connect(recordedFilePlayer, to: mainMixer, format: audioFormat)
+        avAudioEngine.connect(mainMixer, to: output, format: audioFormat)
 
-        input.installTap(onBus: 0, bufferSize: 256, format: voiceIOFormat) { buffer, when in
+        input.installTap(onBus: 0, bufferSize: 256, format: audioFormat) { buffer, when in
             if self.isRecording {
                 do {
                     try self.recordedFile?.write(from: buffer)
@@ -116,7 +113,7 @@ class AudioController {
             recordedFilePlayer.stop()
 
             do {
-                recordedFile = try AVAudioFile(forWriting: recordedFileURL, settings: fileFormat.settings)
+                recordedFile = try AVAudioFile(forWriting: recordedFileURL, settings: audioFormat.settings)
                 isNewRecordingAvailable = true
                 isRecording = true
             } catch {

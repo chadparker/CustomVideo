@@ -69,7 +69,7 @@ class AudioController {
     // MARK: - Actions
 
     @objc func configChanged(_ notification: Notification) {
-        checkEngineIsRunning()
+        ensureEngineIsRunning()
     }
 
     // MARK: - Methods
@@ -112,7 +112,7 @@ class AudioController {
         }
     }
 
-    func checkEngineIsRunning() {
+    func ensureEngineIsRunning() {
         if !avAudioEngine.isRunning {
             start()
         }

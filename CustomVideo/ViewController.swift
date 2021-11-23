@@ -1,7 +1,7 @@
 import AVFoundation
 import UIKit
 
-class ViewController: UIViewController, CameraControllerDelegate {
+class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorControllerDelegate, UINavigationControllerDelegate {
 
     // MARK: - Views
 
@@ -109,7 +109,46 @@ class ViewController: UIViewController, CameraControllerDelegate {
     }
 
     func newVideoFile(_ path: String) {
-        print(path)
+        guard UIVideoEditorController.canEditVideo(atPath: path) else { return }
+
+        let containerVC = UIViewController()
+        containerVC.preferredContentSize = UIScreen.main.bounds.size
+        containerVC.modalPresentationStyle = .popover
+        containerVC.isModalInPresentation = true
+
+        let ppc = containerVC.popoverPresentationController
+        ppc?.sourceView = containerVC.view
+        ppc?.sourceRect = UIScreen.main.bounds
+        ppc?.permittedArrowDirections = .init(rawValue: 0 )
+        ppc?.canOverlapSourceViewRect = true
+
+        let editor = UIVideoEditorController()
+        editor.delegate = self
+        editor.videoPath = path
+        editor.videoQuality = .typeHigh
+
+        containerVC.addChild(editor)
+        containerVC.view.addSubview(editor.view)
+        editor.didMove(toParent: containerVC)
+
+        self.present(containerVC, animated: true)
+    }
+
+    // MARK: - UIVideoEditorControllerDelegate
+
+    func videoEditorController(_ editor: UIVideoEditorController,
+                               didSaveEditedVideoToPath editedVideoPath: String) {
+        dismiss(animated:true)
+    }
+
+    func videoEditorControllerDidCancel(_ editor: UIVideoEditorController) {
+        dismiss(animated:true)
+    }
+
+    func videoEditorController(_ editor: UIVideoEditorController,
+                               didFailWithError error: Error) {
+        print("an error occurred: \(error.localizedDescription)")
+        dismiss(animated:true)
     }
 
     // MARK: - Actions

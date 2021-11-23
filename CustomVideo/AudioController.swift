@@ -118,42 +118,33 @@ class AudioController {
         }
     }
 
-    func toggleRecording() {
-        if isRecording {
-            isRecording = false
-            recordedFile = nil // close file
-        } else {
-            recordedFilePlayer.stop()
-
-            do {
-                recordedFile = try AVAudioFile(forWriting: recordedFileURL, settings: audioFormat.settings)
-                isNewRecordingAvailable = true
-                isRecording = true
-            } catch {
-                print("Could not create file for recording: \(error)")
-            }
-        }
-    }
-
-    func stopRecordingAndPlayers() {
-        if isRecording {
-            isRecording = false
-        }
-
+    func startRecording() {
         recordedFilePlayer.stop()
+        do {
+            recordedFile = try AVAudioFile(forWriting: recordedFileURL, settings: audioFormat.settings)
+            isNewRecordingAvailable = true
+            isRecording = true
+        } catch {
+            print("Could not create file for recording: \(error)")
+        }
     }
 
-    func togglePlaying() {
-        if recordedFilePlayer.isPlaying {
-            recordedFilePlayer.pause()
-        } else {
-            if isNewRecordingAvailable {
-                guard let recordedBuffer = getBuffer(fileURL: recordedFileURL) else { return }
-                recordedFilePlayer.scheduleBuffer(recordedBuffer, at: nil, options: .loops)
-                isNewRecordingAvailable = false
-            }
-            recordedFilePlayer.play()
+    func stopRecording() {
+        isRecording = false
+        recordedFile = nil // close file
+    }
+
+    func play() {
+        if isNewRecordingAvailable {
+            guard let recordedBuffer = getBuffer(fileURL: recordedFileURL) else { return }
+            recordedFilePlayer.scheduleBuffer(recordedBuffer, at: nil, options: .interrupts)
+            isNewRecordingAvailable = false
         }
+        recordedFilePlayer.play()
+    }
+
+    func stop() {
+        recordedFilePlayer.stop()
     }
 
     // MARK: - Private

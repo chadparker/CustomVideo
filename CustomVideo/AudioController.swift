@@ -38,7 +38,7 @@ class AudioController {
             commonFormat: .pcmFormatFloat32,
             sampleRate: 48000,
             channels: 1,
-            interleaved: false
+            interleaved: true
         ) else {
             throw AudioEngineError.fileFormatError
         }
@@ -48,7 +48,7 @@ class AudioController {
         // Set up session
         let session = AVAudioSession.sharedInstance()
         do {
-            try session.setCategory(.record, options: .defaultToSpeaker)
+            try session.setCategory(.playAndRecord, options: .defaultToSpeaker)
         } catch {
             print("Could not set audio category: \(error.localizedDescription)")
         }

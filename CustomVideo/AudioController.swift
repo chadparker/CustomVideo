@@ -12,7 +12,7 @@ class AudioController {
 
     // MARK: - Properties
 
-    private var recordedFileURL = URL(
+    var recordedFileURL = URL(
         fileURLWithPath: "input.caf",
         isDirectory: false,
         relativeTo: URL(fileURLWithPath: NSTemporaryDirectory())

@@ -373,6 +373,7 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
     func fileOutput(_ output: AVCaptureFileOutput,
                     didStartRecordingTo fileURL: URL,
                     from connections: [AVCaptureConnection]) {
+        audioController.startRecording()
         // Enable the Record button to let the user stop recording.
         DispatchQueue.main.async {
             self.recordingEnabled = true
@@ -385,6 +386,7 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
                     didFinishRecordingTo outputFileURL: URL,
                     from connections: [AVCaptureConnection],
                     error: Error?) {
+        audioController.stopRecording()
         // Note: Because we use a unique file path for each recording, a new recording won't overwrite a recording mid-save.
         func cleanup() {
             let path = outputFileURL.path
@@ -413,28 +415,16 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
         }
 
         if success {
-            // Check the authorization status.
-            PHPhotoLibrary.requestAuthorization { status in
-                if status == .authorized {
-                    // Save the movie file to the photo library and cleanup.
-                    PHPhotoLibrary.shared().performChanges({
-                        let options = PHAssetResourceCreationOptions()
-                        options.shouldMoveFile = true
-                        let creationRequest = PHAssetCreationRequest.forAsset()
-                        creationRequest.addResource(with: .video, fileURL: outputFileURL, options: options)
-                    }, completionHandler: { success, error in
-                        if !success {
-                            print("AVCam couldn't save the movie to your photo library: \(String(describing: error))")
-                        }
-                        cleanup()
+            sessionQueue.async { [weak self] in
+                guard let self = self else { return }
+
+                self.mergeVideoAndAudio(videoUrl: outputFileURL, audioUrl: self.audioController.recordedFileURL, shouldFlipHorizontally: false) { [weak self] error, url in
+                    guard let url = url, let self = self else { return }
+                    DispatchQueue.main.async {
+                        self.delegate.newVideoFile(url.path)
                     }
-                    )
-                } else {
-                    cleanup()
                 }
             }
-        } else {
-            cleanup()
         }
 
         DispatchQueue.main.async {
@@ -442,6 +432,105 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
             self.isRecording = false
             // Only enable the ability to change camera if the device has more than one camera.
             self.cameraSwitchingEnabled = self.videoDeviceDiscoverySession.uniqueDevicePositionsCount > 1
+        }
+    }
+
+    // MARK: - A/V merging
+
+    func mergeVideoAndAudio(videoUrl: URL,
+                            audioUrl: URL,
+                            shouldFlipHorizontally: Bool = false,
+                            completion: @escaping (_ error: Error?, _ url: URL?) -> Void) {
+
+        let mixComposition = AVMutableComposition()
+        guard
+            let compositionAddVideo = mixComposition.addMutableTrack(withMediaType: AVMediaType.video, preferredTrackID: kCMPersistentTrackID_Invalid),
+            let compositionAddAudio = mixComposition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid),
+            let compositionAddAudioOfVideo = mixComposition.addMutableTrack(withMediaType: AVMediaType.audio, preferredTrackID: kCMPersistentTrackID_Invalid)
+        else {
+            // TODO: completion() with error
+            return
+        }
+        var mutableCompositionVideoTrack = [AVMutableCompositionTrack]()
+        var mutableCompositionAudioTrack = [AVMutableCompositionTrack]()
+        var mutableCompositionAudioOfVideoTrack = [AVMutableCompositionTrack]()
+
+        let videoAsset = AVAsset(url: videoUrl)
+        let audioAsset = AVAsset(url: audioUrl)
+
+        let videoAssetTrack: AVAssetTrack = videoAsset.tracks(withMediaType: AVMediaType.video)[0]
+        let audioAssetTrack: AVAssetTrack = audioAsset.tracks(withMediaType: AVMediaType.audio)[0]
+        let audioOfVideoAssetTrack: AVAssetTrack? = videoAsset.tracks(withMediaType: AVMediaType.audio).first
+
+        if shouldFlipHorizontally {
+            var mirrorTransform: CGAffineTransform = CGAffineTransform(scaleX: -1.0, y: 1.0)
+            mirrorTransform = mirrorTransform.translatedBy(x: -videoAssetTrack.naturalSize.width, y: 0.0)
+            mirrorTransform = mirrorTransform.translatedBy(x: 0.0, y: -videoAssetTrack.naturalSize.width)
+            compositionAddVideo.preferredTransform = mirrorTransform
+        } else {
+            compositionAddVideo.preferredTransform = videoAssetTrack.preferredTransform
+        }
+
+        mutableCompositionVideoTrack.append(compositionAddVideo)
+        mutableCompositionAudioTrack.append(compositionAddAudio)
+        mutableCompositionAudioOfVideoTrack.append(compositionAddAudioOfVideo)
+
+        do {
+            try mutableCompositionVideoTrack[0].insertTimeRange(
+                CMTimeRangeMake(
+                    start: CMTime.zero,
+                    duration: videoAssetTrack.timeRange.duration
+                ),
+                of: videoAssetTrack,
+                at: CMTime.zero
+            )
+            try mutableCompositionAudioTrack[0].insertTimeRange(
+                CMTimeRangeMake(
+                    start: CMTime.zero,
+                    duration: videoAssetTrack.timeRange.duration
+                ),
+                of: audioAssetTrack,
+                at: CMTime.zero
+            )
+            if let audioOfVideoAssetTrack = audioOfVideoAssetTrack {
+                try mutableCompositionAudioOfVideoTrack[0].insertTimeRange(
+                    CMTimeRangeMake(
+                        start: CMTime.zero,
+                        duration: videoAssetTrack.timeRange.duration
+                    ),
+                    of: audioOfVideoAssetTrack,
+                    at: CMTime.zero
+                )
+            }
+        } catch {
+            print(error.localizedDescription)
+        }
+
+        // TODO: change to temp directory
+        let savePathUrl: URL = URL(fileURLWithPath: NSHomeDirectory() + "/Documents/newVideo.mp4")
+        try? FileManager.default.removeItem(at: savePathUrl)
+
+        // TODO: will this ever be nil?
+        let assetExport: AVAssetExportSession = AVAssetExportSession(asset: mixComposition, presetName: AVAssetExportPresetHighestQuality)!
+        assetExport.outputFileType = AVFileType.mp4
+        assetExport.outputURL = savePathUrl
+        assetExport.shouldOptimizeForNetworkUse = true
+
+        assetExport.exportAsynchronously { () -> Void in
+            switch assetExport.status {
+            case .completed:
+                print("success")
+                completion(nil, savePathUrl)
+            case .failed:
+                print("failed \(assetExport.error?.localizedDescription ?? "error nil")")
+                completion(assetExport.error, nil)
+            case .cancelled:
+                print("cancelled \(assetExport.error?.localizedDescription ?? "error nil")")
+                completion(assetExport.error, nil)
+            default:
+                print("complete")
+                completion(assetExport.error, nil)
+            }
         }
     }
 

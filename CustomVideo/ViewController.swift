@@ -139,29 +139,34 @@ class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorC
 
     // MARK: - UIVideoEditorControllerDelegate
 
-    func videoEditorController(_ editor: UIVideoEditorController,
-                               didSaveEditedVideoToPath editedVideoPath: String) {
-        PHPhotoLibrary.shared().performChanges({
-            let options = PHAssetResourceCreationOptions()
-            options.shouldMoveFile = true
-            let creationRequest = PHAssetCreationRequest.forAsset()
-            creationRequest.addResource(with: .video, fileURL: URL(string: editedVideoPath)!, options: options)
-        }, completionHandler: { success, error in
-            if !success {
-                print("AVCam couldn't save the movie to your photo library: \(String(describing: error))")
+    func videoEditorController(_ editor: UIVideoEditorController, didSaveEditedVideoToPath editedVideoPath: String) {
+        PHPhotoLibrary.requestAuthorization { status in
+            if status == .authorized {
+                PHPhotoLibrary.shared().performChanges({
+                    let options = PHAssetResourceCreationOptions()
+                    options.shouldMoveFile = true
+                    let creationRequest = PHAssetCreationRequest.forAsset()
+                    creationRequest.addResource(with: .video, fileURL: URL(string: editedVideoPath)!, options: options)
+                }, completionHandler: { success, error in
+                    if !success {
+                        print("Couldn't save the movie to your photo library: \(String(describing: error))")
+                    }
+                    DispatchQueue.main.async {
+                        self.dismiss(animated:true)
+                    }
+                })
+            } else {
+                print("Photos not authorized")
             }
-            DispatchQueue.main.async {
-                self.dismiss(animated:true)
-            }
-        })
+        }
+
     }
 
     func videoEditorControllerDidCancel(_ editor: UIVideoEditorController) {
         dismiss(animated:true)
     }
 
-    func videoEditorController(_ editor: UIVideoEditorController,
-                               didFailWithError error: Error) {
+    func videoEditorController(_ editor: UIVideoEditorController, didFailWithError error: Error) {
         print("an error occurred: \(error.localizedDescription)")
         dismiss(animated:true)
     }

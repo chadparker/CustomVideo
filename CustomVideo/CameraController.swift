@@ -387,26 +387,6 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
                     from connections: [AVCaptureConnection],
                     error: Error?) {
         audioController.stopRecording()
-        // Note: Because we use a unique file path for each recording, a new recording won't overwrite a recording mid-save.
-        func cleanup() {
-            let path = outputFileURL.path
-            delegate.newVideoFile(path)
-//            if FileManager.default.fileExists(atPath: path) {
-//                do {
-//                    try FileManager.default.removeItem(atPath: path)
-//                } catch {
-//                    print("Could not remove file at url: \(outputFileURL)")
-//                }
-//            }
-            if let currentBackgroundRecordingID = backgroundRecordingID {
-                backgroundRecordingID = UIBackgroundTaskIdentifier.invalid
-
-                if currentBackgroundRecordingID != UIBackgroundTaskIdentifier.invalid {
-                    UIApplication.shared.endBackgroundTask(currentBackgroundRecordingID)
-                }
-            }
-        }
-
         var success = true
 
         if error != nil {
@@ -420,8 +400,15 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
 
                 self.mergeVideoAndAudio(videoUrl: outputFileURL, audioUrl: self.audioController.recordedFileURL, shouldFlipHorizontally: false) { [weak self] error, url in
                     guard let url = url, let self = self else { return }
+
                     DispatchQueue.main.async {
                         self.delegate.newVideoFile(url.path)
+                    }
+                    if let currentBackgroundRecordingID = self.backgroundRecordingID {
+                        self.backgroundRecordingID = UIBackgroundTaskIdentifier.invalid
+                        if currentBackgroundRecordingID != UIBackgroundTaskIdentifier.invalid {
+                            UIApplication.shared.endBackgroundTask(currentBackgroundRecordingID)
+                        }
                     }
                 }
             }

@@ -1,4 +1,5 @@
 import AVFoundation
+import Photos
 import UIKit
 
 class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorControllerDelegate, UINavigationControllerDelegate {
@@ -140,7 +141,19 @@ class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorC
 
     func videoEditorController(_ editor: UIVideoEditorController,
                                didSaveEditedVideoToPath editedVideoPath: String) {
-        dismiss(animated:true)
+        PHPhotoLibrary.shared().performChanges({
+            let options = PHAssetResourceCreationOptions()
+            options.shouldMoveFile = true
+            let creationRequest = PHAssetCreationRequest.forAsset()
+            creationRequest.addResource(with: .video, fileURL: URL(string: editedVideoPath)!, options: options)
+        }, completionHandler: { success, error in
+            if !success {
+                print("AVCam couldn't save the movie to your photo library: \(String(describing: error))")
+            }
+            DispatchQueue.main.async {
+                self.dismiss(animated:true)
+            }
+        })
     }
 
     func videoEditorControllerDidCancel(_ editor: UIVideoEditorController) {

@@ -111,6 +111,7 @@ class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorC
     func newVideoFile(_ path: String) {
         guard UIVideoEditorController.canEditVideo(atPath: path) else { return }
 
+        // On iPad, UIVideoEditorController must be presented as a popover, so make the biggest popover we can.
         let containerVC = UIViewController()
         containerVC.preferredContentSize = UIScreen.main.bounds.size
         containerVC.modalPresentationStyle = .popover
@@ -126,6 +127,7 @@ class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorC
         editor.delegate = self
         editor.videoPath = path
         editor.videoQuality = .typeHigh
+        editor.videoMaximumDuration = 10
 
         containerVC.addChild(editor)
         containerVC.view.addSubview(editor.view)

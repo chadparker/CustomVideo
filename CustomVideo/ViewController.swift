@@ -49,6 +49,7 @@ class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorC
         super.viewDidLoad()
         setUpViews()
         setUpCamera()
+        AVCaptureDevice.self.addObserver(self, forKeyPath: .activeMicrophoneMode, options: [.initial, .new], context: nil)
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -75,6 +76,17 @@ class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorC
 
     override var shouldAutorotate: Bool {
         cameraController.shouldAutorotate
+    }
+
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == .activeMicrophoneMode {
+            guard let object = object as? AVCaptureDevice.Type else { return }
+            DispatchQueue.main.async { [weak self] in
+                self?.updateMicModeButton(object.activeMicrophoneMode)
+            }
+        } else {
+            super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
+        }
     }
 
     // MARK: - CameraControllerDelegate
@@ -234,6 +246,25 @@ class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorC
         previewView.session = cameraController.session
         cameraController.delegate = self
         cameraController.checkVideoAuthorization()
+    }
+
+    private func updateMicModeButton(_ micMode: AVCaptureDevice.MicrophoneMode) {
+        let symbol: String
+        switch micMode {
+        case .standard:
+            symbol = .symbolMicStandard
+        case .voiceIsolation:
+            symbol = .symbolMicVoiceIsolation
+        case .wideSpectrum:
+            symbol = .symbolMicWideSpectrum
+        @unknown default:
+            fatalError()
+        }
+        micModeButton.setImage(
+            UIImage(systemName: symbol, withConfiguration: .buttonNormal)?
+                .withTintColor(.buttonNormal, renderingMode: .alwaysOriginal),
+            for: .normal
+        )
     }
 }
 

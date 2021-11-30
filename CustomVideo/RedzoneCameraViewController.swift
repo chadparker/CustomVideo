@@ -28,7 +28,7 @@ private extension UIImage.Configuration {
     static let buttonRecord = UIImage.SymbolConfiguration(pointSize: 70, weight: .regular)
 }
 
-final class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorControllerDelegate, UINavigationControllerDelegate {
+final class RedzoneCameraViewController: UIViewController, CameraControllerDelegate, UIVideoEditorControllerDelegate, UINavigationControllerDelegate {
 
     // MARK: - Views
 
@@ -373,7 +373,7 @@ final class ViewController: UIViewController, CameraControllerDelegate, UIVideoE
     }
 }
 
-//extension ViewController: UIViewControllerRepresentable {
+//extension RedzoneCameraViewController: UIViewControllerRepresentable {
 //  func makeUIViewController(context: Context) -> ViewController {
 //      return ViewController()
 //  }

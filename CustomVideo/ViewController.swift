@@ -3,40 +3,113 @@ import Photos
 import SwiftUI
 import UIKit
 
-class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorControllerDelegate, UINavigationControllerDelegate {
+private extension String {
+    static let symbolCameraSwitch = "arrow.triangle.2.circlepath.camera"
+    static let symbolRecord = "record.circle"
+    static let symbolStop = "stop.circle"
+    static let symbolMicStandard = "mic.fill"
+    static let symbolMicVoiceIsolation = "person.wave.2.fill"
+    static let symbolMicWideSpectrum = "waveform.and.mic"
+    static let activeMicrophoneMode = "activeMicrophoneMode"
+}
+
+private extension UIColor {
+    static let buttonNormal = UIColor.white
+    static let buttonDisabled = UIColor.gray
+    static let buttonRecord = UIColor.red
+}
+
+private extension CGColor {
+    static let shadow = UIColor.black.cgColor
+}
+
+private extension UIImage.Configuration {
+    static let buttonNormal = UIImage.SymbolConfiguration(pointSize: 25, weight: .regular)
+    static let buttonRecord = UIImage.SymbolConfiguration(pointSize: 70, weight: .regular)
+}
+
+final class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorControllerDelegate, UINavigationControllerDelegate {
 
     // MARK: - Views
 
-    private lazy var micModeButton = UIButton(type: .roundedRect).configure {
-        $0.setTitle("Mic Mode", for: .normal)
-        $0.addTarget(self, action: #selector(setMicMode), for: .touchUpInside)
+    private lazy var previewView = PreviewView(forAutoLayout: true)
+
+    private lazy var referenceImage = UIImageView(forAutoLayout: true).configure {
+        $0.image = UIImage(named: "IMG_0136")
     }
-    private lazy var recordButton = UIButton(type: .roundedRect).configure {
-        $0.setTitle("Record", for: .normal)
-        $0.addTarget(self, action: #selector(toggleRecording), for: .touchUpInside)
-    }
-    private lazy var cameraSwitchButton = UIButton(type: .roundedRect).configure {
-        $0.setTitle("Switch Camera", for: .normal)
+
+    // main buttons
+
+    private lazy var mainButtonsContainer = UIView(forAutoLayout: true)
+
+    private lazy var cameraSwitchButton = UIButton(forAutoLayout: true).configure {
+        $0.setImage(
+            UIImage(systemName: .symbolCameraSwitch, withConfiguration: .buttonNormal)?
+                .withTintColor(.buttonNormal, renderingMode: .alwaysOriginal),
+            for: .normal
+        )
+        $0.setImage(
+            UIImage(systemName: .symbolCameraSwitch, withConfiguration: .buttonNormal)?
+                .withTintColor(.buttonDisabled, renderingMode: .alwaysOriginal),
+            for: .disabled
+        )
+        $0.layer.shadowColor = .shadow
+        $0.layer.shadowOffset = CGSize(width: -0.5, height: 0.5)
+        $0.layer.shadowOpacity = 0.7
+        $0.layer.shadowRadius = 5
+        $0.layer.masksToBounds = false
         $0.addTarget(self, action: #selector(switchCamera), for: .touchUpInside)
     }
-    private lazy var resumeButton = UIButton(type: .roundedRect).configure {
+
+    private lazy var recordButton = UIButton(forAutoLayout: true).configure {
+        $0.setImage(
+            UIImage(systemName: .symbolRecord, withConfiguration: .buttonRecord)?
+                .withTintColor(.buttonRecord, renderingMode: .alwaysOriginal),
+            for: .normal
+        )
+        $0.setImage(
+            UIImage(systemName: .symbolStop, withConfiguration: .buttonRecord)?
+                .withTintColor(.buttonNormal, renderingMode: .alwaysOriginal),
+            for: .selected
+        )
+        $0.setImage(
+            UIImage(systemName: .symbolRecord, withConfiguration: .buttonRecord)?
+                .withTintColor(.buttonDisabled, renderingMode: .alwaysOriginal),
+            for: .disabled
+        )
+        $0.addTarget(self, action: #selector(toggleRecording), for: .touchUpInside)
+    }
+
+    private lazy var cancelButton = UIButton(forAutoLayout: true).configure {
+        $0.setTitle("Cancel", for: .normal)
+        $0.layer.shadowColor = .shadow
+        $0.layer.shadowOffset = CGSize(width: -0.5, height: 0.5)
+        $0.layer.shadowOpacity = 0.5
+        $0.layer.shadowRadius = 2
+        $0.layer.masksToBounds = false
+        $0.addTarget(self, action: #selector(cancel), for: .touchUpInside)
+    }
+
+    // secondary buttons
+
+    private lazy var secondaryButtonsContainer = UIView(forAutoLayout: true)
+
+    private lazy var micModeButton = UIButton(forAutoLayout: true).configure {
+        $0.setImage(
+            UIImage(systemName: .symbolMicStandard, withConfiguration: .buttonNormal)?
+                .withTintColor(.buttonNormal, renderingMode: .alwaysOriginal),
+            for: .normal
+        )
+        $0.layer.shadowColor = .shadow
+        $0.layer.shadowOffset = CGSize(width: -0.5, height: 0.5)
+        $0.layer.shadowOpacity = 0.5
+        $0.layer.shadowRadius = 2
+        $0.layer.masksToBounds = false
+        $0.addTarget(self, action: #selector(setMicMode), for: .touchUpInside)
+    }
+    private lazy var resumeButton = UIButton(forAutoLayout: true).configure {
         $0.setTitle("Resume", for: .normal)
         $0.addTarget(self, action: #selector(resumeInterruptedSession), for: .touchUpInside)
-    }
-
-    private lazy var buttonStackView = UIStackView(
-        arrangedSubviews: [resumeButton, recordButton, micModeButton, cameraSwitchButton]
-    ).configure {
-        $0.axis = .horizontal
-        $0.distribution = .fillEqually
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-
-    private lazy var previewView = PreviewView().configure {
-        $0.translatesAutoresizingMaskIntoConstraints = false
-    }
-    private lazy var spinner = UIActivityIndicatorView(style: .large).configure {
-        $0.color = UIColor.yellow
     }
 
     // MARK: - Properties
@@ -100,10 +173,7 @@ class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorC
     }
 
     func isRecording(_ isRecording: Bool) {
-        recordButton.setTitle(
-            isRecording ? "Stop" : "Record",
-            for: .normal
-        )
+        recordButton.isSelected = isRecording
     }
 
     func cameraSwitchingEnabled(_ enabled: Bool) {
@@ -141,7 +211,7 @@ class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorC
         editor.delegate = self
         editor.videoPath = path
         editor.videoQuality = .typeHigh
-        editor.videoMaximumDuration = 10
+        //editor.videoMaximumDuration = 10 (in seconds. set to Redzone max video length)
 
         containerVC.addChild(editor)
         containerVC.view.addSubview(editor.view)
@@ -186,6 +256,10 @@ class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorC
 
     // MARK: - Actions
 
+    @objc private func cancel(_ button: UIButton) {
+        dismiss(animated: true)
+    }
+
     @objc private func setMicMode(_ button: UIButton) {
         AVCaptureDevice.showSystemUserInterface(.microphoneModes)
     }
@@ -219,27 +293,58 @@ class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorC
 
         view.backgroundColor = .black
 
+        // preview
+
         view.addSubview(previewView)
-        NSLayoutConstraint.activate([
-            previewView.topAnchor.constraint(equalTo: view.topAnchor),
-            previewView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            previewView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            previewView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-
-        view.addSubview(buttonStackView)
-        NSLayoutConstraint.activate([
-            buttonStackView.heightAnchor.constraint(equalToConstant: 150),
-            buttonStackView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
-            buttonStackView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
-            buttonStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
-        ])
-
-        previewView.addSubview(self.spinner)
-
-        view.addGestureRecognizer(
+        NSLayoutConstraint.activate(previewView.constraints(for: .all, relativeTo: view))
+        previewView.addGestureRecognizer(
             UITapGestureRecognizer(target: self, action: #selector(focusAndExposeTap))
         )
+
+//        referenceImage.alpha = 0.1
+//        view.addSubview(referenceImage)
+//        NSLayoutConstraint.activate(referenceImage.constraints(for: .all, relativeTo: view))
+
+        // main buttons
+
+        view.addSubview(mainButtonsContainer)
+        NSLayoutConstraint.activate {
+            $0 += mainButtonsContainer.constraints(for: [.top, .bottom, .trailing], relativeTo: view)
+            $0 += mainButtonsContainer.constraints(for: Size(width: 106, height: .none))
+        }
+        mainButtonsContainer.addSubview(cameraSwitchButton)
+        mainButtonsContainer.addSubview(recordButton)
+        mainButtonsContainer.addSubview(cancelButton)
+        NSLayoutConstraint.activate([
+            cameraSwitchButton.leadingAnchor.constraint(equalTo: mainButtonsContainer.leadingAnchor),
+            cameraSwitchButton.trailingAnchor.constraint(equalTo: mainButtonsContainer.trailingAnchor),
+            cameraSwitchButton.bottomAnchor.constraint(equalTo: recordButton.topAnchor, constant: 0),
+            cameraSwitchButton.heightAnchor.constraint(equalTo: cameraSwitchButton.widthAnchor),
+
+            recordButton.leadingAnchor.constraint(equalTo: mainButtonsContainer.leadingAnchor),
+            recordButton.trailingAnchor.constraint(equalTo: mainButtonsContainer.trailingAnchor),
+            recordButton.centerYAnchor.constraint(equalTo: mainButtonsContainer.centerYAnchor),
+            recordButton.heightAnchor.constraint(equalTo: recordButton.widthAnchor),
+
+            cancelButton.leadingAnchor.constraint(equalTo: mainButtonsContainer.leadingAnchor),
+            cancelButton.trailingAnchor.constraint(equalTo: mainButtonsContainer.trailingAnchor),
+            cancelButton.bottomAnchor.constraint(equalTo: mainButtonsContainer.bottomAnchor, constant: -30)
+        ])
+
+        // secondary buttons
+
+        view.addSubview(secondaryButtonsContainer)
+        NSLayoutConstraint.activate {
+            $0 += secondaryButtonsContainer.constraints(for: [.leading, .top, .bottom], relativeTo: view)
+            $0 += secondaryButtonsContainer.constraints(for: Size(width: 80, height: .none))
+        }
+        secondaryButtonsContainer.addSubview(micModeButton)
+        NSLayoutConstraint.activate([
+            micModeButton.leadingAnchor.constraint(equalTo: secondaryButtonsContainer.leadingAnchor),
+            micModeButton.trailingAnchor.constraint(equalTo: secondaryButtonsContainer.trailingAnchor),
+            micModeButton.centerYAnchor.constraint(equalTo: secondaryButtonsContainer.centerYAnchor),
+            micModeButton.heightAnchor.constraint(equalTo: micModeButton.widthAnchor)
+        ])
     }
 
     private func setUpCamera() {

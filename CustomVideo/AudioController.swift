@@ -35,16 +35,8 @@ class AudioController {
         self.audioFormat = audioFormat
 
         let session = AVAudioSession.sharedInstance()
-        do {
-            try session.setCategory(.playAndRecord, options: .defaultToSpeaker)
-        } catch {
-            print("Could not set audio category: \(error.localizedDescription)")
-        }
-        do {
-            try session.setPreferredSampleRate(audioFormat.sampleRate)
-        } catch {
-            print("Could not set preferred sample rate: \(error.localizedDescription)")
-        }
+        try session.setCategory(.playAndRecord, options: .defaultToSpeaker)
+        try session.setPreferredSampleRate(audioFormat.sampleRate)
 
         NotificationCenter.default.addObserver(
             self,
@@ -57,22 +49,14 @@ class AudioController {
     // MARK: - Actions
 
     @objc func configChanged(_ notification: Notification) {
-        ensureEngineIsRunning()
+        try? ensureEngineIsRunning()
     }
 
     // MARK: - Methods
 
-    func setup() {
+    func setup() throws {
         let input = audioEngine.inputNode
-        do {
-            try input.setVoiceProcessingEnabled(true)
-        } catch {
-            print("Could not enable voice processing \(error)")
-            return
-        }
-
-        let output = avAudioEngine.outputNode
-        let mainMixer = avAudioEngine.mainMixerNode
+        try input.setVoiceProcessingEnabled(true)
 
         audioEngine.connect(audioEngine.mainMixerNode, to: audioEngine.outputNode, format: audioFormat)
 
@@ -91,29 +75,20 @@ class AudioController {
         audioEngine.prepare()
     }
 
-    func start() {
-        do {
-            try avAudioEngine.start()
-        } catch {
-            print("Could not start audio engine: \(error)")
+    func start() throws {
+        try audioEngine.start()
+    }
+
+    func ensureEngineIsRunning() throws {
+        if !audioEngine.isRunning {
+            try start()
         }
     }
 
-    func ensureEngineIsRunning() {
-        if !avAudioEngine.isRunning {
-            start()
-        }
-    }
-
-    func startRecording() {
-        recordedFilePlayer.stop()
-        do {
-            recordedFile = try AVAudioFile(forWriting: recordedFileURL, settings: audioFormat.settings)
-            isNewRecordingAvailable = true
-            isRecording = true
-        } catch {
-            print("Could not create file for recording: \(error)")
-        }
+    func startRecording() throws {
+        recordedFile = try AVAudioFile(forWriting: recordedFileURL, settings: audioFormat.settings)
+        isNewRecordingAvailable = true
+        isRecording = true
     }
 
     func stopRecording() {

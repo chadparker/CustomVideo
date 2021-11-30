@@ -66,10 +66,10 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
         self.previewView = previewView
         do {
             audioController = try AudioController()
-            audioController.setup()
-            audioController.start()
+            try audioController.setup()
+            try audioController.start()
         } catch {
-            fatalError("Could not set up audio engine: \(error)")
+            fatalError("Could not set up audio engine: \(error.localizedDescription)")
         }
     }
 
@@ -373,7 +373,11 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
     func fileOutput(_ output: AVCaptureFileOutput,
                     didStartRecordingTo fileURL: URL,
                     from connections: [AVCaptureConnection]) {
-        audioController.startRecording()
+        do {
+            try audioController.startRecording()
+        } catch {
+            print("Error starting recording: \(error)")
+        }
         // Enable the Record button to let the user stop recording.
         DispatchQueue.main.async {
             self.recordingEnabled = true

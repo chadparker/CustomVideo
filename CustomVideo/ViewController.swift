@@ -1,5 +1,6 @@
 import AVFoundation
 import Photos
+import SwiftUI
 import UIKit
 
 class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorControllerDelegate, UINavigationControllerDelegate {
@@ -235,3 +236,22 @@ class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorC
         cameraController.checkVideoAuthorization()
     }
 }
+
+//extension ViewController: UIViewControllerRepresentable {
+//  func makeUIViewController(context: Context) -> ViewController {
+//      return ViewController()
+//  }
+//
+//  func updateUIViewController(_ uiViewController: ViewController,
+//    context: Context) {
+//  }
+//}
+//
+//struct ViewControllerPreviews: PreviewProvider {
+//    static var previews: some View {
+//        ViewController()
+//            .ignoresSafeArea()
+//            .previewDevice("iPad (9th generation)")
+//            .previewInterfaceOrientation(.landscapeLeft)
+//    }
+//}

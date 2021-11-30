@@ -14,7 +14,7 @@ class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorC
         $0.setTitle("Record", for: .normal)
         $0.addTarget(self, action: #selector(toggleRecording), for: .touchUpInside)
     }
-    private lazy var cameraButton = UIButton(type: .roundedRect).configure {
+    private lazy var cameraSwitchButton = UIButton(type: .roundedRect).configure {
         $0.setTitle("Switch Camera", for: .normal)
         $0.addTarget(self, action: #selector(switchCamera), for: .touchUpInside)
     }
@@ -24,7 +24,7 @@ class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorC
     }
 
     private lazy var buttonStackView = UIStackView(
-        arrangedSubviews: [resumeButton, recordButton, micModeButton, cameraButton]
+        arrangedSubviews: [resumeButton, recordButton, micModeButton, cameraSwitchButton]
     ).configure {
         $0.axis = .horizontal
         $0.distribution = .fillEqually
@@ -94,7 +94,7 @@ class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorC
     }
 
     func cameraSwitchingEnabled(_ enabled: Bool) {
-        cameraButton.isEnabled = enabled
+        cameraSwitchButton.isEnabled = enabled
     }
 
     func resumingEnabled(_ enabled: Bool) {
@@ -200,7 +200,7 @@ class ViewController: UIViewController, CameraControllerDelegate, UIVideoEditorC
 
     private func setUpViews() {
         recordButton.isEnabled = false
-        cameraButton.isEnabled = false
+        cameraSwitchButton.isEnabled = false
         resumeButton.isHidden = true
         isRecording(false)
 

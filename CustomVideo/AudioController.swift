@@ -10,18 +10,17 @@ class AudioController {
 
     // MARK: - Properties
 
-    var recordedFileURL = URL(
+    private(set) var isRecording = false
+    private(set) var recordedFileURL = URL(
         fileURLWithPath: "input.caf",
         isDirectory: false,
         relativeTo: URL(fileURLWithPath: NSTemporaryDirectory())
     )
     private var audioEngine = AVAudioEngine()
-    private var avAudioEngine = AVAudioEngine()
     private var isNewRecordingAvailable = false
     private var audioFormat: AVAudioFormat
     private var recordedFile: AVAudioFile?
 
-    public private(set) var isRecording = false
     // MARK: - Init
 
     init() throws {
@@ -34,9 +33,7 @@ class AudioController {
             throw AudioEngineError.fileFormatError
         }
         self.audioFormat = audioFormat
-        print("File format: \(String(describing: audioFormat))")
 
-        // Set up session
         let session = AVAudioSession.sharedInstance()
         do {
             try session.setCategory(.playAndRecord, options: .defaultToSpeaker)
@@ -53,7 +50,7 @@ class AudioController {
             self,
             selector: #selector(configChanged(_:)),
             name: .AVAudioEngineConfigurationChange,
-            object: avAudioEngine
+            object: audioEngine
         )
     }
 
@@ -66,7 +63,7 @@ class AudioController {
     // MARK: - Methods
 
     func setup() {
-        let input = avAudioEngine.inputNode
+        let input = audioEngine.inputNode
         do {
             try input.setVoiceProcessingEnabled(true)
         } catch {
@@ -78,7 +75,6 @@ class AudioController {
         let mainMixer = avAudioEngine.mainMixerNode
 
         audioEngine.connect(audioEngine.mainMixerNode, to: audioEngine.outputNode, format: audioFormat)
-        avAudioEngine.connect(mainMixer, to: output, format: audioFormat)
 
         input.installTap(onBus: 0, bufferSize: 256, format: audioFormat) { buffer, when in
             if self.isRecording {
@@ -92,7 +88,7 @@ class AudioController {
                 //self.voiceIOPowerMeter.processSilence()
             }
         }
-        avAudioEngine.prepare()
+        audioEngine.prepare()
     }
 
     func start() {

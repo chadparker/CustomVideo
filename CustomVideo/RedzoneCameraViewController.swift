@@ -1,6 +1,6 @@
 import AVFoundation
 import Photos
-import SwiftUI
+import RedzoneUI
 import UIKit
 
 private extension String {
@@ -28,7 +28,7 @@ private extension UIImage.Configuration {
     static let buttonRecord = UIImage.SymbolConfiguration(pointSize: 70, weight: .regular)
 }
 
-final class RedzoneCameraViewController: UIViewController, CameraControllerDelegate, UIVideoEditorControllerDelegate, UINavigationControllerDelegate {
+public final class RedzoneCameraViewController: UIViewController, CameraControllerDelegate, UIVideoEditorControllerDelegate, UINavigationControllerDelegate {
 
     // MARK: - Views
 
@@ -118,24 +118,26 @@ final class RedzoneCameraViewController: UIViewController, CameraControllerDeleg
 
     // MARK: - View Lifecycle
 
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         setUpViews()
         setUpCamera()
-        AVCaptureDevice.self.addObserver(self, forKeyPath: .activeMicrophoneMode, options: [.initial, .new], context: nil)
+        if #available(iOS 15.0, *) {
+            AVCaptureDevice.self.addObserver(self, forKeyPath: .activeMicrophoneMode, options: [.initial, .new], context: nil)
+        }
     }
 
-    override func viewWillAppear(_ animated: Bool) {
+    override public func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         cameraController.startSession()
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
+    override public func viewWillDisappear(_ animated: Bool) {
         cameraController.stopSession()
         super.viewWillDisappear(animated)
     }
 
-    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    override public func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
         super.viewWillTransition(to: size, with: coordinator)
         if let videoPreviewLayerConnection = previewView.videoPreviewLayer.connection {
             let deviceOrientation = UIDevice.current.orientation
@@ -147,15 +149,17 @@ final class RedzoneCameraViewController: UIViewController, CameraControllerDeleg
         }
     }
 
-    override var shouldAutorotate: Bool {
+    override public var shouldAutorotate: Bool {
         cameraController.shouldAutorotate
     }
 
-    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == .activeMicrophoneMode {
             guard let object = object as? AVCaptureDevice.Type else { return }
             DispatchQueue.main.async { [weak self] in
-                self?.updateMicModeButton(object.activeMicrophoneMode)
+                if #available(iOS 15.0, *) {
+                    self?.updateMicModeButton(object.activeMicrophoneMode)
+                }
             }
         } else {
             super.observeValue(forKeyPath: keyPath, of: object, change: change, context: context)
@@ -211,7 +215,7 @@ final class RedzoneCameraViewController: UIViewController, CameraControllerDeleg
         editor.delegate = self
         editor.videoPath = path
         editor.videoQuality = .typeHigh
-        //editor.videoMaximumDuration = 10 (in seconds. set to Redzone max video length)
+        // editor.videoMaximumDuration = 10 (in seconds. set to Redzone max video length)
 
         containerVC.addChild(editor)
         containerVC.view.addSubview(editor.view)
@@ -222,7 +226,7 @@ final class RedzoneCameraViewController: UIViewController, CameraControllerDeleg
 
     // MARK: - UIVideoEditorControllerDelegate
 
-    func videoEditorController(_ editor: UIVideoEditorController, didSaveEditedVideoToPath editedVideoPath: String) {
+    public func videoEditorController(_ editor: UIVideoEditorController, didSaveEditedVideoToPath editedVideoPath: String) {
         PHPhotoLibrary.requestAuthorization { status in
             if status == .authorized {
                 PHPhotoLibrary.shared().performChanges({
@@ -235,7 +239,7 @@ final class RedzoneCameraViewController: UIViewController, CameraControllerDeleg
                         print("Couldn't save the movie to your photo library: \(String(describing: error))")
                     }
                     DispatchQueue.main.async {
-                        self.dismiss(animated:true)
+                        self.dismiss(animated: true)
                     }
                 })
             } else {
@@ -245,13 +249,13 @@ final class RedzoneCameraViewController: UIViewController, CameraControllerDeleg
 
     }
 
-    func videoEditorControllerDidCancel(_ editor: UIVideoEditorController) {
-        dismiss(animated:true)
+    public func videoEditorControllerDidCancel(_ editor: UIVideoEditorController) {
+        dismiss(animated: true)
     }
 
-    func videoEditorController(_ editor: UIVideoEditorController, didFailWithError error: Error) {
+    public func videoEditorController(_ editor: UIVideoEditorController, didFailWithError error: Error) {
         print("an error occurred: \(error.localizedDescription)")
-        dismiss(animated:true)
+        dismiss(animated: true)
     }
 
     // MARK: - Actions
@@ -261,7 +265,9 @@ final class RedzoneCameraViewController: UIViewController, CameraControllerDeleg
     }
 
     @objc private func setMicMode(_ button: UIButton) {
-        AVCaptureDevice.showSystemUserInterface(.microphoneModes)
+        if #available(iOS 15.0, *) {
+            AVCaptureDevice.showSystemUserInterface(.microphoneModes)
+        }
     }
 
     @objc private func toggleRecording(_ recordButton: UIButton) {
@@ -338,13 +344,15 @@ final class RedzoneCameraViewController: UIViewController, CameraControllerDeleg
             $0 += secondaryButtonsContainer.constraints(for: [.leading, .top, .bottom], relativeTo: view)
             $0 += secondaryButtonsContainer.constraints(for: Size(width: 80, height: .none))
         }
-        secondaryButtonsContainer.addSubview(micModeButton)
-        NSLayoutConstraint.activate([
-            micModeButton.leadingAnchor.constraint(equalTo: secondaryButtonsContainer.leadingAnchor),
-            micModeButton.trailingAnchor.constraint(equalTo: secondaryButtonsContainer.trailingAnchor),
-            micModeButton.centerYAnchor.constraint(equalTo: secondaryButtonsContainer.centerYAnchor),
-            micModeButton.heightAnchor.constraint(equalTo: micModeButton.widthAnchor)
-        ])
+        if #available(iOS 15.0, *) {
+            secondaryButtonsContainer.addSubview(micModeButton)
+            NSLayoutConstraint.activate([
+                micModeButton.leadingAnchor.constraint(equalTo: secondaryButtonsContainer.leadingAnchor),
+                micModeButton.trailingAnchor.constraint(equalTo: secondaryButtonsContainer.trailingAnchor),
+                micModeButton.centerYAnchor.constraint(equalTo: secondaryButtonsContainer.centerYAnchor),
+                micModeButton.heightAnchor.constraint(equalTo: micModeButton.widthAnchor)
+            ])
+        }
     }
 
     private func setUpCamera() {
@@ -353,6 +361,7 @@ final class RedzoneCameraViewController: UIViewController, CameraControllerDeleg
         cameraController.checkVideoAuthorization()
     }
 
+    @available(iOS 15.0, *)
     private func updateMicModeButton(_ micMode: AVCaptureDevice.MicrophoneMode) {
         let symbol: String
         switch micMode {
@@ -372,22 +381,3 @@ final class RedzoneCameraViewController: UIViewController, CameraControllerDeleg
         )
     }
 }
-
-//extension RedzoneCameraViewController: UIViewControllerRepresentable {
-//  func makeUIViewController(context: Context) -> ViewController {
-//      return ViewController()
-//  }
-//
-//  func updateUIViewController(_ uiViewController: ViewController,
-//    context: Context) {
-//  }
-//}
-//
-//struct ViewControllerPreviews: PreviewProvider {
-//    static var previews: some View {
-//        ViewController()
-//            .ignoresSafeArea()
-//            .previewDevice("iPad (9th generation)")
-//            .previewInterfaceOrientation(.landscapeLeft)
-//    }
-//}

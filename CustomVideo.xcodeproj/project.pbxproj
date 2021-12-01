@@ -7,15 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		879190482755844B00A6A29A /* Constraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879190402755844B00A6A29A /* Constraints.swift */; };
-		879190492755844B00A6A29A /* Anchor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879190412755844B00A6A29A /* Anchor.swift */; };
-		8791904A2755844B00A6A29A /* LayoutExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879190422755844B00A6A29A /* LayoutExtensions.swift */; };
-		8791904B2755844B00A6A29A /* Axes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879190432755844B00A6A29A /* Axes.swift */; };
-		8791904C2755844B00A6A29A /* Size.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879190442755844B00A6A29A /* Size.swift */; };
-		8791904D2755844B00A6A29A /* KeyboardPresenting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879190452755844B00A6A29A /* KeyboardPresenting.swift */; };
-		8791904E2755844B00A6A29A /* Constrainable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879190462755844B00A6A29A /* Constrainable.swift */; };
-		8791904F2755844B00A6A29A /* Constraining.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879190472755844B00A6A29A /* Constraining.swift */; };
-		87919051275586DF00A6A29A /* NSLayoutConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87919050275586DF00A6A29A /* NSLayoutConstraint.swift */; };
+		8749F7D62758043800B546CB /* RedzoneUI in Frameworks */ = {isa = PBXBuildFile; productRef = 8749F7D52758043800B546CB /* RedzoneUI */; };
+		879190552757ED0C00A6A29A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879190542757ED0C00A6A29A /* ViewController.swift */; };
 		87E77FB7274BF19600D0EAA4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E77FB6274BF19600D0EAA4 /* AppDelegate.swift */; };
 		87E77FB9274BF19600D0EAA4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E77FB8274BF19600D0EAA4 /* SceneDelegate.swift */; };
 		87E77FBB274BF19600D0EAA4 /* RedzoneCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E77FBA274BF19600D0EAA4 /* RedzoneCameraViewController.swift */; };
@@ -23,21 +16,13 @@
 		87E77FC0274BF19800D0EAA4 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 87E77FBF274BF19800D0EAA4 /* Assets.xcassets */; };
 		87E77FC3274BF19800D0EAA4 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 87E77FC1274BF19800D0EAA4 /* LaunchScreen.storyboard */; };
 		87E77FCB274BF1B400D0EAA4 /* PreviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E77FCA274BF1B400D0EAA4 /* PreviewView.swift */; };
-		87E77FCD274BF1BA00D0EAA4 /* Configurable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E77FCC274BF1BA00D0EAA4 /* Configurable.swift */; };
 		87E77FCF274BF4C700D0EAA4 /* CameraController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E77FCE274BF4C700D0EAA4 /* CameraController.swift */; };
 		87E77FD1274C03FB00D0EAA4 /* AudioController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E77FD0274C03FB00D0EAA4 /* AudioController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		879190402755844B00A6A29A /* Constraints.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constraints.swift; sourceTree = "<group>"; };
-		879190412755844B00A6A29A /* Anchor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Anchor.swift; sourceTree = "<group>"; };
-		879190422755844B00A6A29A /* LayoutExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayoutExtensions.swift; sourceTree = "<group>"; };
-		879190432755844B00A6A29A /* Axes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Axes.swift; sourceTree = "<group>"; };
-		879190442755844B00A6A29A /* Size.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Size.swift; sourceTree = "<group>"; };
-		879190452755844B00A6A29A /* KeyboardPresenting.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyboardPresenting.swift; sourceTree = "<group>"; };
-		879190462755844B00A6A29A /* Constrainable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constrainable.swift; sourceTree = "<group>"; };
-		879190472755844B00A6A29A /* Constraining.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Constraining.swift; sourceTree = "<group>"; };
-		87919050275586DF00A6A29A /* NSLayoutConstraint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NSLayoutConstraint.swift; sourceTree = "<group>"; };
+		8749F7D32758040B00B546CB /* RedzoneUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RedzoneUI; path = CustomVideo/RedzoneUI; sourceTree = "<group>"; };
+		879190542757ED0C00A6A29A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		87E77FB3274BF19600D0EAA4 /* CustomVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CustomVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		87E77FB6274BF19600D0EAA4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		87E77FB8274BF19600D0EAA4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -47,7 +32,6 @@
 		87E77FC2274BF19800D0EAA4 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		87E77FC4274BF19800D0EAA4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		87E77FCA274BF1B400D0EAA4 /* PreviewView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PreviewView.swift; sourceTree = "<group>"; };
-		87E77FCC274BF1BA00D0EAA4 /* Configurable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configurable.swift; sourceTree = "<group>"; };
 		87E77FCE274BF4C700D0EAA4 /* CameraController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraController.swift; sourceTree = "<group>"; };
 		87E77FD0274C03FB00D0EAA4 /* AudioController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -57,32 +41,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8749F7D62758043800B546CB /* RedzoneUI in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		8791903F2755844B00A6A29A /* Layout */ = {
+		8749F7D42758043800B546CB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				879190402755844B00A6A29A /* Constraints.swift */,
-				879190412755844B00A6A29A /* Anchor.swift */,
-				879190422755844B00A6A29A /* LayoutExtensions.swift */,
-				879190432755844B00A6A29A /* Axes.swift */,
-				879190442755844B00A6A29A /* Size.swift */,
-				879190452755844B00A6A29A /* KeyboardPresenting.swift */,
-				879190462755844B00A6A29A /* Constrainable.swift */,
-				879190472755844B00A6A29A /* Constraining.swift */,
 			);
-			path = Layout;
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		87E77FAA274BF19600D0EAA4 = {
 			isa = PBXGroup;
 			children = (
 				87E77FB5274BF19600D0EAA4 /* CustomVideo */,
+				8749F7D32758040B00B546CB /* RedzoneUI */,
 				87E77FB4274BF19600D0EAA4 /* Products */,
+				8749F7D42758043800B546CB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -99,13 +78,11 @@
 			children = (
 				87E77FB6274BF19600D0EAA4 /* AppDelegate.swift */,
 				87E77FB8274BF19600D0EAA4 /* SceneDelegate.swift */,
+				879190542757ED0C00A6A29A /* ViewController.swift */,
 				87E77FBA274BF19600D0EAA4 /* RedzoneCameraViewController.swift */,
 				87E77FCE274BF4C700D0EAA4 /* CameraController.swift */,
 				87E77FD0274C03FB00D0EAA4 /* AudioController.swift */,
 				87E77FCA274BF1B400D0EAA4 /* PreviewView.swift */,
-				87E77FCC274BF1BA00D0EAA4 /* Configurable.swift */,
-				8791903F2755844B00A6A29A /* Layout */,
-				87919050275586DF00A6A29A /* NSLayoutConstraint.swift */,
 				87E77FBC274BF19600D0EAA4 /* Main.storyboard */,
 				87E77FBF274BF19800D0EAA4 /* Assets.xcassets */,
 				87E77FC1274BF19800D0EAA4 /* LaunchScreen.storyboard */,
@@ -130,6 +107,9 @@
 			dependencies = (
 			);
 			name = CustomVideo;
+			packageProductDependencies = (
+				8749F7D52758043800B546CB /* RedzoneUI */,
+			);
 			productName = CustomVideo;
 			productReference = 87E77FB3274BF19600D0EAA4 /* CustomVideo.app */;
 			productType = "com.apple.product-type.application";
@@ -186,21 +166,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				87E77FD1274C03FB00D0EAA4 /* AudioController.swift in Sources */,
-				8791904D2755844B00A6A29A /* KeyboardPresenting.swift in Sources */,
 				87E77FCF274BF4C700D0EAA4 /* CameraController.swift in Sources */,
-				87E77FCD274BF1BA00D0EAA4 /* Configurable.swift in Sources */,
 				87E77FBB274BF19600D0EAA4 /* RedzoneCameraViewController.swift in Sources */,
-				8791904C2755844B00A6A29A /* Size.swift in Sources */,
-				879190482755844B00A6A29A /* Constraints.swift in Sources */,
-				87919051275586DF00A6A29A /* NSLayoutConstraint.swift in Sources */,
-				8791904E2755844B00A6A29A /* Constrainable.swift in Sources */,
+				879190552757ED0C00A6A29A /* ViewController.swift in Sources */,
 				87E77FCB274BF1B400D0EAA4 /* PreviewView.swift in Sources */,
 				87E77FB7274BF19600D0EAA4 /* AppDelegate.swift in Sources */,
-				8791904B2755844B00A6A29A /* Axes.swift in Sources */,
-				8791904A2755844B00A6A29A /* LayoutExtensions.swift in Sources */,
-				879190492755844B00A6A29A /* Anchor.swift in Sources */,
 				87E77FB9274BF19600D0EAA4 /* SceneDelegate.swift in Sources */,
-				8791904F2755844B00A6A29A /* Constraining.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -420,6 +391,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		8749F7D52758043800B546CB /* RedzoneUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RedzoneUI;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 87E77FAB274BF19600D0EAA4 /* Project object */;
 }

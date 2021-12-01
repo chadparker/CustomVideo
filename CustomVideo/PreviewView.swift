@@ -1,5 +1,5 @@
-import UIKit
 import AVFoundation
+import UIKit
 
 class PreviewView: UIView {
 
@@ -12,7 +12,7 @@ class PreviewView: UIView {
 
     var session: AVCaptureSession? {
         get {
-            return videoPreviewLayer.session
+            videoPreviewLayer.session
         }
         set {
             videoPreviewLayer.session = newValue
@@ -20,6 +20,6 @@ class PreviewView: UIView {
     }
 
     override class var layerClass: AnyClass {
-        return AVCaptureVideoPreviewLayer.self
+        AVCaptureVideoPreviewLayer.self
     }
 }

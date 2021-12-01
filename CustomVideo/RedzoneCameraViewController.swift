@@ -117,21 +117,23 @@ public final class RedzoneCameraViewController: UIViewController, CameraControll
 
     // MARK: - Properties
 
-    private lazy var cameraController = CameraController(previewView: previewView)
+    private var cameraController: CameraController!
 
     // MARK: - View Lifecycle
 
     override public func viewDidLoad() {
         super.viewDidLoad()
         setUpViews()
-        setUpCamera()
         if #available(iOS 15.0, *) {
             AVCaptureDevice.self.addObserver(self, forKeyPath: .activeMicrophoneMode, options: [.initial, .new], context: nil)
         }
     }
 
-    override public func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
+    override public func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if cameraController == nil {
+            setUpCamera()
+        }
         cameraController.startSession()
     }
 
@@ -359,6 +361,7 @@ public final class RedzoneCameraViewController: UIViewController, CameraControll
     }
 
     private func setUpCamera() {
+        cameraController = CameraController(previewView: previewView)
         previewView.session = cameraController.session
         cameraController.delegate = self
         cameraController.checkVideoAuthorization()

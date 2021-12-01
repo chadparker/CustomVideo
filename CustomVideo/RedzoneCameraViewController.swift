@@ -4,12 +4,15 @@ import RedzoneUI
 import UIKit
 
 private extension String {
-    static let symbolCameraSwitch = "arrow.triangle.2.circlepath.camera"
+    static let symbolCameraSwitch = "arrow.triangle.2.circlepath"
     static let symbolRecord = "record.circle"
     static let symbolStop = "stop.circle"
     static let symbolMicStandard = "mic.fill"
     static let symbolMicVoiceIsolation = "person.wave.2.fill"
     static let symbolMicWideSpectrum = "waveform.and.mic"
+    static let symbolFlashOn = "bolt.fill"
+    static let symbolFlashOff = "bolt.slash.fill"
+
     static let activeMicrophoneMode = "activeMicrophoneMode"
 }
 

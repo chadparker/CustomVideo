@@ -158,7 +158,10 @@ public final class RedzoneCameraViewController: UIViewController, CameraControll
         cameraController.shouldAutorotate
     }
 
-    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+    // https://developer.apple.com/forums/thread/691850
+    // https://stackoverflow.com/questions/49747536/xcode-9-block-based-kvo-violation-for-observevalue-function
+    // https://github.com/realm/SwiftLint/issues/1989
+    override public func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey: Any]?, context: UnsafeMutableRawPointer?) {
         if keyPath == .activeMicrophoneMode {
             guard let object = object as? AVCaptureDevice.Type else { return }
             DispatchQueue.main.async { [weak self] in

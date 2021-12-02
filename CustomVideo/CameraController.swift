@@ -7,6 +7,7 @@ protocol CameraControllerDelegate: AnyObject {
     func recordingEnabled(_ enabled: Bool)
     func isRecording(_ isRecording: Bool)
     func cameraSwitchingEnabled(_ enabled: Bool)
+    func micModeEnabled(_ enabled: Bool)
     func resumingEnabled(_ enabled: Bool)
     func resumeFailed()
     func newVideoFile(_ path: String)
@@ -44,6 +45,7 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
     private var recordingEnabled: Bool = false { didSet { delegate.recordingEnabled(recordingEnabled) } }
     private var isRecording: Bool = false { didSet { delegate.isRecording(isRecording) } }
     private var cameraSwitchingEnabled = false { didSet { delegate.cameraSwitchingEnabled(cameraSwitchingEnabled) } }
+    private var micModeEnabled = false { didSet { delegate.micModeEnabled(micModeEnabled) } }
     private var resumingEnabled: Bool = false { didSet { delegate.resumingEnabled(resumingEnabled) } }
 
     var shouldAutorotate: Bool {
@@ -225,6 +227,7 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
     func switchCamera() {
         recordingEnabled = false
         cameraSwitchingEnabled = false
+        micModeEnabled = false
 
         sessionQueue.async {
             let currentVideoDevice = self.videoDeviceInput.device
@@ -288,6 +291,7 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
             DispatchQueue.main.async {
                 self.recordingEnabled = self.movieFileOutput != nil
                 self.cameraSwitchingEnabled = true
+                self.micModeEnabled = true
             }
         }
     }
@@ -339,6 +343,7 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
 
         recordingEnabled = false
         cameraSwitchingEnabled = false
+        micModeEnabled = false
 
         let videoPreviewLayerOrientation = previewView.videoPreviewLayer.connection?.videoOrientation
         sessionQueue.async {
@@ -423,6 +428,7 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
             self.isRecording = false
             // Only enable the ability to change camera if the device has more than one camera.
             self.cameraSwitchingEnabled = self.videoDeviceDiscoverySession.uniqueDevicePositionsCount > 1
+            self.micModeEnabled = true
         }
     }
 
@@ -535,6 +541,7 @@ class CameraController: NSObject, AVCaptureFileOutputRecordingDelegate {
                 self.recordingEnabled = isSessionRunning && self.movieFileOutput != nil
                 // Only enable the ability to change camera if the device has more than one camera.
                 self.cameraSwitchingEnabled = isSessionRunning && self.videoDeviceDiscoverySession.uniqueDevicePositionsCount > 1
+                self.micModeEnabled = isSessionRunning
             }
         }
         keyValueObservations.append(keyValueObservation)

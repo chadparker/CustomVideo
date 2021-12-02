@@ -192,6 +192,10 @@ public final class RedzoneCameraViewController: UIViewController, CameraControll
         cameraSwitchButton.isEnabled = enabled
     }
 
+    func micModeEnabled(_ enabled: Bool) {
+        micModeButton.isEnabled = enabled
+    }
+
     func resumingEnabled(_ enabled: Bool) {
         resumeButton.isHidden = !enabled
     }

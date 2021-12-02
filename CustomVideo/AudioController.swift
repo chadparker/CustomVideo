@@ -60,16 +60,16 @@ class AudioController {
 
         audioEngine.connect(audioEngine.mainMixerNode, to: audioEngine.outputNode, format: audioFormat)
 
-        input.installTap(onBus: 0, bufferSize: 256, format: audioFormat) { buffer, when in
+        input.installTap(onBus: 0, bufferSize: 256, format: audioFormat) { buffer, _ in
             if self.isRecording {
                 do {
                     try self.recordedFile?.write(from: buffer)
                 } catch {
                     print("Could not write buffer: \(error)")
                 }
-                //self.voiceIOPowerMeter.process(buffer: buffer)
+                // self.voiceIOPowerMeter.process(buffer: buffer)
             } else {
-                //self.voiceIOPowerMeter.processSilence()
+                // self.voiceIOPowerMeter.processSilence()
             }
         }
         audioEngine.prepare()

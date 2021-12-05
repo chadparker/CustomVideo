@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		8749F7D62758043800B546CB /* RedzoneUI in Frameworks */ = {isa = PBXBuildFile; productRef = 8749F7D52758043800B546CB /* RedzoneUI */; };
 		879190552757ED0C00A6A29A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 879190542757ED0C00A6A29A /* ViewController.swift */; };
+		87B61C1727596C1B0017E7F4 /* ButtonsPreviewVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87B61C1627596C1B0017E7F4 /* ButtonsPreviewVC.swift */; };
 		87E77FB7274BF19600D0EAA4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E77FB6274BF19600D0EAA4 /* AppDelegate.swift */; };
 		87E77FB9274BF19600D0EAA4 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E77FB8274BF19600D0EAA4 /* SceneDelegate.swift */; };
 		87E77FBB274BF19600D0EAA4 /* RedzoneCameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87E77FBA274BF19600D0EAA4 /* RedzoneCameraViewController.swift */; };
@@ -23,6 +24,7 @@
 /* Begin PBXFileReference section */
 		8749F7D32758040B00B546CB /* RedzoneUI */ = {isa = PBXFileReference; lastKnownFileType = folder; name = RedzoneUI; path = CustomVideo/RedzoneUI; sourceTree = "<group>"; };
 		879190542757ED0C00A6A29A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		87B61C1627596C1B0017E7F4 /* ButtonsPreviewVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonsPreviewVC.swift; sourceTree = "<group>"; };
 		87E77FB3274BF19600D0EAA4 /* CustomVideo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CustomVideo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		87E77FB6274BF19600D0EAA4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		87E77FB8274BF19600D0EAA4 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -83,6 +85,7 @@
 				87E77FCE274BF4C700D0EAA4 /* CameraController.swift */,
 				87E77FD0274C03FB00D0EAA4 /* AudioController.swift */,
 				87E77FCA274BF1B400D0EAA4 /* PreviewView.swift */,
+				87B61C1627596C1B0017E7F4 /* ButtonsPreviewVC.swift */,
 				87E77FBC274BF19600D0EAA4 /* Main.storyboard */,
 				87E77FBF274BF19800D0EAA4 /* Assets.xcassets */,
 				87E77FC1274BF19800D0EAA4 /* LaunchScreen.storyboard */,
@@ -168,6 +171,7 @@
 				87E77FD1274C03FB00D0EAA4 /* AudioController.swift in Sources */,
 				87E77FCF274BF4C700D0EAA4 /* CameraController.swift in Sources */,
 				87E77FBB274BF19600D0EAA4 /* RedzoneCameraViewController.swift in Sources */,
+				87B61C1727596C1B0017E7F4 /* ButtonsPreviewVC.swift in Sources */,
 				879190552757ED0C00A6A29A /* ViewController.swift in Sources */,
 				87E77FCB274BF1B400D0EAA4 /* PreviewView.swift in Sources */,
 				87E77FB7274BF19600D0EAA4 /* AppDelegate.swift in Sources */,
@@ -328,6 +332,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -356,6 +361,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

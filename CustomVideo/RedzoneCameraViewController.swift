@@ -68,7 +68,7 @@ public final class RedzoneCameraViewController: UIViewController, CameraControll
                 .withTintColor(.circularButtonDisabled, renderingMode: .alwaysOriginal),
             for: .disabled
         )
-        //$0.addTarget(self, action: #selector(switchCamera), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(switchCamera), for: .touchUpInside)
     }
 
     private lazy var recordButton = UIButton(type: .system).configure {
@@ -86,7 +86,7 @@ public final class RedzoneCameraViewController: UIViewController, CameraControll
                 .withTintColor(.circularButtonDisabled, renderingMode: .alwaysTemplate),
             for: .disabled
         )
-        //$0.addTarget(self, action: #selector(toggleRecording), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(toggleRecording), for: .touchUpInside)
     }
 
     private lazy var micModeButton = UIButton.circularButton().configure {
@@ -95,7 +95,7 @@ public final class RedzoneCameraViewController: UIViewController, CameraControll
                 .withTintColor(.circularButtonNormal, renderingMode: .alwaysOriginal),
             for: .normal
         )
-        //$0.addTarget(self, action: #selector(setMicMode), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(setMicMode), for: .touchUpInside)
     }
 
     private lazy var mainButtonsStackView = UIStackView(arrangedSubviews: [cameraSwitchButton, recordButton, micModeButton]).configure {
@@ -116,7 +116,7 @@ public final class RedzoneCameraViewController: UIViewController, CameraControll
         $0.layer.shadowOpacity = 0.5
         $0.layer.shadowRadius = 2
         $0.layer.masksToBounds = false
-        //$0.addTarget(self, action: #selector(cancel), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(cancel), for: .touchUpInside)
     }
 
     // other buttons
@@ -137,7 +137,7 @@ public final class RedzoneCameraViewController: UIViewController, CameraControll
         $0.titleLabel?.font = .preferredFont(forTextStyle: .headline) // move this to attributed text
         $0.setAttributedTitle(attributedText(prefix: "1"), for: .normal)
         $0.setAttributedTitle(attributedText(prefix: "2"), for: .selected)
-        //$0.addTarget(self, action: #selector(switchCamera), for: .touchUpInside)
+//        $0.addTarget(self, action: #selector(zoomToggle), for: .touchUpInside)
     }
 
     private lazy var torchButton = UIButton.circularButton().configure {
@@ -157,7 +157,7 @@ public final class RedzoneCameraViewController: UIViewController, CameraControll
     private lazy var resumeButton = UIButton(type: .system).configure {
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("Resume", for: .normal)
-        //$0.addTarget(self, action: #selector(resumeInterruptedSession), for: .touchUpInside)
+        $0.addTarget(self, action: #selector(resumeInterruptedSession), for: .touchUpInside)
     }
 
     // count up/down
@@ -315,7 +315,7 @@ public final class RedzoneCameraViewController: UIViewController, CameraControll
             if status == .authorized {
                 PHPhotoLibrary.shared().performChanges({
                     let options = PHAssetResourceCreationOptions()
-                    options.shouldMoveFile = true
+                    options.shouldMoveFile = false
                     let creationRequest = PHAssetCreationRequest.forAsset()
                     creationRequest.addResource(with: .video, fileURL: URL(string: editedVideoPath)!, options: options)
                 }, completionHandler: { success, error in

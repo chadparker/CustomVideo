@@ -17,7 +17,6 @@ private extension UIColor {
     static let circularButtonDisabled: UIColor = .gray
     static let circularButtonSelected: UIColor = .redzoneYellow
     static let circularButtonBackground: UIColor = .init(white: 0.3, alpha: 0.5) // use blending mode?
-    //static let buttonRecord: UIColor = .red
 }
 
 private extension UIImage.Configuration {
@@ -27,24 +26,23 @@ private extension UIImage.Configuration {
 private extension CGFloat {
     static let mainButtonStackWidth: CGFloat = 106
     static let circularButtonSize: CGFloat = 40
-    //static let recordButtonSize: CGFloat = 76
 }
 
-extension UIButton {
-    static func circularButton() -> UIButton {
-        let button = UIButton(type: .system)
-        button.translatesAutoresizingMaskIntoConstraints = false
-        let config = UIImage.SymbolConfiguration(pointSize: .circularButtonSize)
-        button.setBackgroundImage(
-            UIImage(systemName: "circle.fill", withConfiguration: config)?
-                .withTintColor(.circularButtonBackground, renderingMode: .alwaysOriginal),
-            for: .normal
-        )
-        return button
-    }
-}
+//extension UIButton {
+//    static func circularButton() -> UIButton {
+//        let button = UIButton(type: .system)
+//        button.translatesAutoresizingMaskIntoConstraints = false
+//        let config = UIImage.SymbolConfiguration(pointSize: .circularButtonSize)
+//        button.setBackgroundImage(
+//            UIImage(systemName: "circle.fill", withConfiguration: config)?
+//                .withTintColor(.circularButtonBackground, renderingMode: .alwaysOriginal),
+//            for: .normal
+//        )
+//        return button
+//    }
+//}
 
-final class ButtonsPreviewVC: UIViewController {
+public final class ButtonsPreviewVC: UIViewController {
 
     private lazy var referenceImage = UIImageView(forAutoLayout: true).configure {
 //        $0.image = UIImage(named: "IMG_0136")
@@ -157,7 +155,7 @@ final class ButtonsPreviewVC: UIViewController {
     }
 
     // count up/down
-    
+
     private lazy var countUpLabel = ColorLabelView(forAutoLayout: true).configure {
         $0.setup(
             text: "00:00",
@@ -185,7 +183,7 @@ final class ButtonsPreviewVC: UIViewController {
 
     // MARK: - View Lifecycle
 
-    override func viewDidLoad() {
+    override public func viewDidLoad() {
         super.viewDidLoad()
         setUpViews()
     }
@@ -246,11 +244,11 @@ final class ButtonsPreviewVC: UIViewController {
 }
 
 extension ButtonsPreviewVC: UIViewControllerRepresentable {
-    func makeUIViewController(context: Context) -> ButtonsPreviewVC {
+    public func makeUIViewController(context: Context) -> ButtonsPreviewVC {
         return ButtonsPreviewVC()
     }
 
-  func updateUIViewController(_ uiViewController: ButtonsPreviewVC,
+    public func updateUIViewController(_ uiViewController: ButtonsPreviewVC,
     context: Context) {
   }
 }

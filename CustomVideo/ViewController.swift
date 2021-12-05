@@ -17,8 +17,8 @@ final class ViewController: UIViewController {
     }
 
     @objc func showCamera(_ button: UIButton) {
-        let cameraVC = ButtonsPreviewVC()
-//        let cameraVC = RedzoneCameraViewController()
+//        let cameraVC = ButtonsPreviewVC()
+        let cameraVC = RedzoneCameraViewController()
         cameraVC.modalPresentationStyle = .fullScreen
         present(cameraVC, animated: true) {
 

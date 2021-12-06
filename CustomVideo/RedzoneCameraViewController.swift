@@ -442,19 +442,23 @@ public final class RedzoneCameraViewController: UIViewController, CameraControll
     @available(iOS 15.0, *)
     private func updateMicModeButton(_ micMode: AVCaptureDevice.MicrophoneMode) {
         let symbol: String
+        let tintColor: UIColor
         switch micMode {
         case .standard:
             symbol = .symbolMicStandard
+            tintColor = .circularButtonNormal
         case .voiceIsolation:
             symbol = .symbolMicVoiceIsolation
+            tintColor = .circularButtonSelected
         case .wideSpectrum:
             symbol = .symbolMicWideSpectrum
+            tintColor = .circularButtonSelected
         @unknown default:
             fatalError()
         }
         micModeButton.setImage(
             UIImage(systemName: symbol, withConfiguration: .circularButton)?
-                .withTintColor(.circularButtonNormal, renderingMode: .alwaysOriginal),
+                .withTintColor(tintColor, renderingMode: .alwaysOriginal),
             for: .normal
         )
     }

@@ -258,6 +258,9 @@ public final class RedzoneCameraViewController: UIViewController, CameraControll
 
     func isRecording(_ isRecording: Bool) {
         recordButton.isSelected = isRecording
+        cameraSwitchButton.isHidden = isRecording
+        micModeButton.isHidden = isRecording
+        torchButton.isHidden = isRecording
     }
 
     func cameraSwitchingEnabled(_ enabled: Bool) {

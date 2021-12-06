@@ -311,23 +311,26 @@ public final class RedzoneCameraViewController: UIViewController, CameraControll
     // MARK: - UIVideoEditorControllerDelegate
 
     public func videoEditorController(_ editor: UIVideoEditorController, didSaveEditedVideoToPath editedVideoPath: String) {
-        PHPhotoLibrary.requestAuthorization { status in
-            if status == .authorized {
-                PHPhotoLibrary.shared().performChanges({
-                    let options = PHAssetResourceCreationOptions()
-                    options.shouldMoveFile = false
-                    let creationRequest = PHAssetCreationRequest.forAsset()
-                    creationRequest.addResource(with: .video, fileURL: URL(string: editedVideoPath)!, options: options)
-                }, completionHandler: { success, error in
-                    if !success {
-                        print("Couldn't save the movie to your photo library: \(String(describing: error))")
-                    }
-                    DispatchQueue.main.async {
-                        self.dismiss(animated: true)
-                    }
-                })
-            } else {
-                print("Photos not authorized")
+        editor.delegate = nil
+        dismiss(animated: true) {
+            PHPhotoLibrary.requestAuthorization { status in
+                if status == .authorized {
+                    PHPhotoLibrary.shared().performChanges({
+                        let options = PHAssetResourceCreationOptions()
+                        options.shouldMoveFile = true
+                        let creationRequest = PHAssetCreationRequest.forAsset()
+                        creationRequest.addResource(with: .video, fileURL: URL(string: editedVideoPath)!, options: options)
+                    }, completionHandler: { success, error in
+                        if !success {
+                            print("Couldn't save the movie to your photo library: \(String(describing: error))")
+                        }
+                        DispatchQueue.main.async {
+                            self.dismiss(animated: true)
+                        }
+                    })
+                } else {
+                    print("Photos not authorized")
+                }
             }
         }
 

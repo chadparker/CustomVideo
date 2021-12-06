@@ -110,11 +110,11 @@ public final class RedzoneCameraViewController: UIViewController, CameraControll
         $0.translatesAutoresizingMaskIntoConstraints = false
         $0.setTitle("Cancel", for: .normal)
         $0.setTitleColor(.white, for: .normal)
-        $0.titleLabel?.font = .systemFont(ofSize: 18, weight: .medium)
+        $0.titleLabel?.font = .systemFont(ofSize: 18, weight: .regular)
         $0.layer.shadowColor = UIColor.black.cgColor
         $0.layer.shadowOffset = CGSize(width: -0.5, height: 0.5)
-        $0.layer.shadowOpacity = 0.5
-        $0.layer.shadowRadius = 2
+        $0.layer.shadowOpacity = 0.8
+        $0.layer.shadowRadius = 3
         $0.layer.masksToBounds = false
         $0.addTarget(self, action: #selector(cancel), for: .touchUpInside)
     }
@@ -413,7 +413,7 @@ public final class RedzoneCameraViewController: UIViewController, CameraControll
             mainButtonsStackView.widthAnchor.constraint(equalToConstant: .mainButtonStackWidth),
 
             cancelButton.trailingAnchor.constraint(equalTo: mainButtonsStackView.trailingAnchor),
-            cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            cancelButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
             cancelButton.widthAnchor.constraint(equalToConstant: .mainButtonStackWidth),
             cancelButton.heightAnchor.constraint(equalToConstant: 60),
 
